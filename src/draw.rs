@@ -1,9 +1,6 @@
 use crate::Float64;
 use base64::Engine;
-use petgraph::{
-    graph::{Graph, NodeIndex},
-    visit::{GraphProp, IntoEdgeReferences, IntoNodeReferences, NodeIndexable},
-};
+use petgraph::graph::{Graph, NodeIndex};
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::io::Write;
@@ -45,15 +42,6 @@ fn build_graph(
     }
 }
 
-pub fn draw_graph<G>(graph: G, opts: &[&str]) -> String
-where
-    G: GraphProp + IntoEdgeReferences + IntoNodeReferences + NodeIndexable,
-    G::EdgeWeight: Display,
-    G::NodeWeight: Display,
-{
-    draw_dot(petgraph::dot::Dot::new(graph), opts)
-}
-
 pub fn draw_dot<T>(dot: T, opts: &[&str]) -> String
 where
     T: Display,
@@ -85,10 +73,6 @@ where
         }
         Err(e) => panic!("{}", e),
     }
-}
-
-pub fn evcxr_render_as_png(content: String) {
-    evcxr_render_as("image/png", content);
 }
 
 pub fn evcxr_render_as(mime: &str, content: String) {
