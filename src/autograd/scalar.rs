@@ -51,9 +51,10 @@ impl Eq for Float64Inner {}
 
 impl Hash for Float64Inner {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.v.to_bits().hash(state);
-        self.g.to_bits().hash(state);
-        self.op.hash(state);
+        let ptr = format!("{:p}", self);
+
+        // ptr alone is not enough
+        ptr.hash(state);
         self.children.hash(state);
     }
 }
@@ -93,7 +94,7 @@ impl Float64 {
 
     pub fn relu(&self) -> Self {
         let inner = self.borrow();
-        let v = if inner.v >= 0.0 { inner.v } else { 0.0 };
+        let v = inner.v.max(0.0);
 
         let bwd: BackwardFn = |val| {
             let mut origin = val.children[0].borrow_mut();
